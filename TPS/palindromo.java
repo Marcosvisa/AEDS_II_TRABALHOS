@@ -2,26 +2,20 @@ import java.util.Scanner;
 
 public class palindromo{
 
-public static void verificar (String s){
-
+public static boolean verificar (String s){
 
 int tamanho = s.length();
+boolean result= true;
 
+    //iterativo para verificar se a ultima letra é diferente da primeira, as verificacoes vao indo para o meio do string
+    for(int x=0, y=tamanho-1; x< tamanho/2; x++, y--){
+        if ( s.charAt(x) != s.charAt(y) ) {
+             result = false;
+        }
 
-//iterativo para verificar se a ultima letra é diferente da primeira
-for(int x=0, y=tamanho-1; x< tamanho/2; x++, y--){
+    }
 
-if ( s.charAt(x) != s.charAt(y) ) {
-  System.out.println("NAO");
-     return;
-}
-
-
-}
-
-    System.out.println("SIM");
-
-
+     return result;
 
 }
 
@@ -35,14 +29,20 @@ String palavra;
 palavra = sc.nextLine();
 
 //enquanto a entrada for diferente de "FIM", verifica se é palindromoo
-while(!palavra.equals("FIM")){
-  //palavra.charAt(0)!='F' && palavra.charAt(1)!='I' && palavra.charAt(2)!='M' 
-         verificar(palavra);
+while(!(palavra.length()== 3 && palavra.charAt(0)=='F' && palavra.charAt(1)=='I')){
+
+  
+         if(verificar(palavra)){
+           System.out.println("SIM");
+         }
+         else{
+         System.out.println("NAO");
+         }
          palavra = sc.nextLine();
 }
 
 
 sc.close();
-}
 
+}
 }
