@@ -7,11 +7,12 @@ public class alteracao {
 
       String nova="";
 
+      //iterativo para percorrer a string e rescrever uma nova string 
        for(int x=0; x <texto.length(); x++ ){
-         if(texto.charAt(x)==let1){
+         if(texto.charAt(x)==let1){ //se tal caraceter for igual a primeira letra sorteada, na nova string sera a seguunda letra sorteada
          nova=nova+let2;
         }
-        else{
+        else{// se nao for igual a primeira letra, continua o mesmo caractere na nova string
 
         nova=nova+texto.charAt(x);
        }
@@ -31,6 +32,8 @@ Scanner sc = new Scanner(System.in);
 
 palavra = sc.nextLine();
 
+
+// while para rodar o codigo enquanto a entrada for diferente de FIM
 while(!(palavra.length()==3 && palavra.charAt(0)=='F' && palavra.charAt(1)=='I' && palavra.charAt(2)=='M')){
 
     char letra1 = (char) ( 'a' + (Math. abs ( gerador.nextInt ( ) ) % 26 ) );
