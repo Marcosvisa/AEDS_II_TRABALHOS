@@ -69,20 +69,24 @@ return resposta;
             }
             return resposta;
             }
-   
+
            //metodo para conferir se é um numero real
            public static String conferirReal(String s){
 
             String resposta="";
-            int contador=0;
+            int contadorPontos=0, contadorNum=0;
                 for(int x=0; x<s.length(); x++){
             
-                  if(s.charAt(x)=='.'){
-                    contador++;
+                  if(s.charAt(x)=='.'||s.charAt(x)==',' ){
+                    contadorPontos++;
+                    
+                  if(s.charAt(x)=='0' ||s.charAt(x)=='1'||s.charAt(x)=='2'||s.charAt(x)=='3'||s.charAt(x)=='4'||s.charAt(x)=='5'|| s.charAt(x)=='6'||s.charAt(x)=='7'||s.charAt(x)=='8'||s.charAt(x)=='9'){
+                    contadorNum++;
+                     }
                    }
             
                      }
-            if(contador>0){
+            if(contadorPontos+contadorNum==s.length() && contadorPontos<2){
             
             resposta="SIM";
             }
@@ -103,10 +107,8 @@ palavra= sc.nextLine();
         //receber entradas a ate o usuario digitar FIM
          while(!(palavra.length()==3 && palavra.charAt(0)=='F' && palavra.charAt(1)=='I'&& palavra.charAt(2)=='M')){
 
-           System.out.println( conferirV(palavra) );
-           System.out.println( conferirC(palavra) );
-           System.out.println( conferirInt(palavra) );
-           System.out.println( conferirReal(palavra) );
+           System.out.println( conferirV(palavra)+ " "+conferirC(palavra)+ " " + conferirInt(palavra)+ " "+conferirReal(palavra));
+           
            palavra= sc.nextLine();
          }
 
