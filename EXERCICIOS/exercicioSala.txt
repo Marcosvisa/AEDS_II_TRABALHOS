@@ -1,0 +1,33 @@
+
+
+ public void inserir(int x){
+ 
+  Celula i= primiero;
+
+  for(i; i.prox!=null && i.prox.elemento<x; i=i.prox){
+  }
+
+  Celula tmp = new Celula(x);
+  tmp.prox=i.prox;
+  i.prox=tmp;
+   
+  if(tmp.prox==null){
+    ultimo=tmp;
+    }
+
+  tmp=null;
+   }
+
+
+ public boolean pesquisar(int x) {
+ 
+   boolean resp =false;
+
+
+   for(Celula i=primeiro.prox; i!=null && i.elemento<x; i=i.prox){
+        if(i.elemento=x){
+         resp=true;
+         }
+   }
+  return resp;
+ }

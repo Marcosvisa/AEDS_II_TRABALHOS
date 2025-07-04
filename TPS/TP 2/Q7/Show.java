@@ -392,7 +392,7 @@ for(; x<s.length(); x++){
 
    shows[i]= new Show(id, type, title, director, criarLista(cast), country, data, ano, rating, duration, criarLista(list), descripition);
    }
-   static int contarComp=0, contarMov=0;
+
 
     public static void main (String args[]) throws FileNotFoundException{
        
@@ -424,80 +424,67 @@ for(; x<s.length(); x++){
             }
             sc.close();
             long inicio = System.currentTimeMillis();//contar o tempo de execucao
-            String matricula="008559933";
-            String []shows2 = new String[1000];
-            int contador =0;
             //processar entradas do verde
+            Show []shows2 = new Show[1368];
+            String matricula="008559933";
+            int contarComp=0, contarMov=0;
+            int contador =0;
             Scanner scanner= new Scanner(System.in);
             String entrada;
             entrada= scanner.nextLine();
-            //preencher o novo vetor ate encontrar FIM
              while(!(entrada.length()== 3 && entrada.charAt(0)=='F' && entrada.charAt(1)=='I'&& entrada.charAt(2)=='M')){
               
-                for(int x=0; x<shows.length; x++){
+                for(int x=0; x<=indice; x++){
                     if(entrada.equals(shows[x].id)){
-                     shows2[contador]=shows[x].title;
-                     x=shows.length +1;
+                     shows2[contador]=shows[x];
+                     x=indice+1;
                      contador++;
                     }
                 }
              entrada= scanner.nextLine();
              }
             
-             //ordenar
-             for (int i = 0; i < contador - 1; i++) {
-                for (int j = 0; j < contador - 1 - i; j++) {
-                    if (shows2[j].compareTo(shows2[j + 1]) > 0) {
-                        String temp = shows2[j];
-                        shows2[j] = shows2[j + 1];
-                        shows2[j + 1] = temp;
-                    }
-                }
-            }
-            //pesquisar se tem os titulos no novo vetor 
-            entrada = scanner.nextLine();
-            while (!(entrada.equals("FIM"))) {
-                boolean encontrado = false;
-                int inicio2 = 0, fim = contador - 1;
-            
-                while (inicio2 <= fim) {
-                    int meio = (inicio2 + fim) / 2;
-                    contarComp++;  // comparação
-                    int comp = entrada.compareTo(shows2[meio]);
-            
-                    if (comp == 0) {
-                        System.out.println("SIM");
-                        encontrado = true;
-                        break;
-                    } else if (comp < 0) {
-                        fim = meio - 1;
-                    } else {
-                        inicio2 = meio + 1;
-                    }
-                }
-            
-                if (!encontrado) {
-                    System.out.println("NAO");
-                }
-            
-                entrada = scanner.nextLine();
-            }
-            
-            scanner.close();        
-             
+            scanner.close();
 
-             
-             long fim = System.currentTimeMillis();
-             long tempoExecucao = fim - inicio;
-             
-             //salvar dadaos em arquivo
-               try (BufferedWriter writer = new BufferedWriter(new FileWriter("00859933_sequencial.txt"))) {
-              writer.write("Matricula: " + matricula + "\n");
-              writer.write("Tempo de execucao: " + tempoExecucao + " ms\n");
-              writer.write("Numero de comparacoes: " + contarComp + "\n");
-          } catch (IOException e) {
-              System.out.println("Erro ao salvar o arquivo: " + e.getMessage());
-          }
-      }
-     
+      //ordenar por inserção
+      for (int i = 1; i < contador; i++) {
+        Show temp = shows2[i];
+        int j = i - 1;
+        boolean continuar = true;
+    
+        while (j >= 0 && continuar) {
+            contarComp++;
+            int cmpType = temp.type.compareTo(shows2[j].type);
+            int cmpTitle = temp.title.compareTo(shows2[j].title);
+    
+            if (cmpType < 0 || (cmpType == 0 && cmpTitle < 0)) {
+                shows2[j + 1] = shows2[j];
+                contarMov++;
+                j--;
+            } else {
+                continuar = false;
+            }
+        }
+        shows2[j + 1] = temp;
+        contarMov++;
+    }  
+
+           //imprimir
+           for(int x=0; x<contador; x++){
+            shows2[x].imprimir();
+           }
+       
+           long fim = System.currentTimeMillis();
+           long tempoExecucao = fim - inicio;
+           
+           //salvar dados em um  arquivo
+           try (BufferedWriter writer = new BufferedWriter(new FileWriter("00859933_insercao.txt"))) {
+            writer.write(matricula + "\t" + tempoExecucao + "\t" + contarComp);
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar o arquivo: " + e.getMessage());
+        }
+    }
+   
+
+
 }

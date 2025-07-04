@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -167,6 +166,19 @@ public class Show {
          bolhaLista(nova);
         return nova;
     }
+
+ public static Show pesquisarShow(String s, Show[] lista) {
+        for (int x = 0; x < lista.length; x++) {
+            if (lista[x] != null && s.equals(lista[x].id)) {
+                return lista[x];
+            }
+        }
+        return null;
+    }
+
+
+
+
     //metodo clonee
     public Show clone() {
         String[] castClone = cast != null ? new String[cast.length] : null;
@@ -184,13 +196,7 @@ public class Show {
         return new Show(id, type, title, director, castClone, country, data, ano,
                         rating, duration, listClone, descripition);
     }
-    //imprimir
-    public void imprimir() {
-        System.out.println("=> " + id + " ## " + title + " ## "+type+" ## " + director + " ## " +"["+
-                           formatarLista(cast)+"]" + " ## " + country + " ## " + data + " ## " +
-                           (ano == 0 ? "NaN" : ano) + " ## " +
-                           rating + " ## " + duration + " ## " + "["+formatarLista(list) +"]"+ " ##");
-    }
+ 
     //bolha para ordenar lista
     public static void bolhaLista(String[] array) {
         int n = array.length;
@@ -204,6 +210,13 @@ public class Show {
             }
         }
     }
+
+ public void imprimir(){ 
+       System.out.println("=> " + id + " ## " + title + " ## "+type+" ## " + director + " ## " +"["+
+                           formatarLista(cast)+"]" + " ## " + country + " ## " + data + " ## " +
+                           (ano == 0 ? "NaN" : ano) + " ## " +
+                           rating + " ## " +duration + " ## " + "["+formatarLista(list) +"]"+ " ##");
+}
     // formatar lista para imprimir
     private String formatarLista(String[] array) {
         if (array == null || array.length == 0 || (array.length == 1 && array[0].equals("NaN"))) {
@@ -392,13 +405,13 @@ for(; x<s.length(); x++){
 
    shows[i]= new Show(id, type, title, director, criarLista(cast), country, data, ano, rating, duration, criarLista(list), descripition);
    }
-   static int contarComp=0, contarMov=0;
 
-    public static void main (String args[]) throws FileNotFoundException{
+
+   public static void main(String[] args) throws Exception {
        
             File file = new File("/tmp/disneyplus.csv");
             Scanner sc = new Scanner(file);
-            Show []shows = new Show[1368];
+            Show []shows = new Show[1369];
             int indice =0;
             sc.nextLine();
             while (sc.hasNextLine()) {
@@ -424,80 +437,162 @@ for(; x<s.length(); x++){
             }
             sc.close();
             long inicio = System.currentTimeMillis();//contar o tempo de execucao
-            String matricula="008559933";
-            String []shows2 = new String[1000];
-            int contador =0;
             //processar entradas do verde
-            Scanner scanner= new Scanner(System.in);
+             Scanner scanner= new Scanner(System.in);
             String entrada;
+            Lista lista=new Lista();
             entrada= scanner.nextLine();
-            //preencher o novo vetor ate encontrar FIM
+
              while(!(entrada.length()== 3 && entrada.charAt(0)=='F' && entrada.charAt(1)=='I'&& entrada.charAt(2)=='M')){
               
-                for(int x=0; x<shows.length; x++){
-                    if(entrada.equals(shows[x].id)){
-                     shows2[contador]=shows[x].title;
-                     x=shows.length +1;
-                     contador++;
-                    }
+                for (int x = 0; x <= indice; x++) {
+                 if (shows[x] != null && entrada.equals(shows[x].id)) {
+                 lista.inserirFim(shows[x]);
                 }
+}
              entrada= scanner.nextLine();
              }
             
-             //ordenar
-             for (int i = 0; i < contador - 1; i++) {
-                for (int j = 0; j < contador - 1 - i; j++) {
-                    if (shows2[j].compareTo(shows2[j + 1]) > 0) {
-                        String temp = shows2[j];
-                        shows2[j] = shows2[j + 1];
-                        shows2[j + 1] = temp;
-                    }
-                }
-            }
-            //pesquisar se tem os titulos no novo vetor 
-            entrada = scanner.nextLine();
-            while (!(entrada.equals("FIM"))) {
-                boolean encontrado = false;
-                int inicio2 = 0, fim = contador - 1;
-            
-                while (inicio2 <= fim) {
-                    int meio = (inicio2 + fim) / 2;
-                    contarComp++;  // comparação
-                    int comp = entrada.compareTo(shows2[meio]);
-            
-                    if (comp == 0) {
-                        System.out.println("SIM");
-                        encontrado = true;
-                        break;
-                    } else if (comp < 0) {
-                        fim = meio - 1;
-                    } else {
-                        inicio2 = meio + 1;
-                    }
-                }
-            
-                if (!encontrado) {
-                    System.out.println("NAO");
-                }
-            
-                entrada = scanner.nextLine();
-            }
-            
-            scanner.close();        
-             
+     int numero = Integer.parseInt(scanner.nextLine());
+        for (int x = 0; x < numero; x++) {
+            entrada = scanner.next();
 
-             
-             long fim = System.currentTimeMillis();
-             long tempoExecucao = fim - inicio;
-             
-             //salvar dadaos em arquivo
-               try (BufferedWriter writer = new BufferedWriter(new FileWriter("00859933_sequencial.txt"))) {
-              writer.write("Matricula: " + matricula + "\n");
-              writer.write("Tempo de execucao: " + tempoExecucao + " ms\n");
-              writer.write("Numero de comparacoes: " + contarComp + "\n");
-          } catch (IOException e) {
-              System.out.println("Erro ao salvar o arquivo: " + e.getMessage());
-          }
-      }
-     
+            if (entrada.equals("II")) {
+                String s = scanner.next();
+                lista.inserirInicio(pesquisarShow(s, shows));
+            } else if (entrada.equals("IF")) {
+                String s = scanner.next();
+                lista.inserirFim(pesquisarShow(s, shows));
+            } else if (entrada.equals("RI")) {
+                Show removido = lista.removerInicio();
+                System.out.println("(R) " + removido.getTitle());
+            } else if (entrada.equals("RF")) {
+                Show removido = lista.removerFim();
+                System.out.println("(R) " + removido.getTitle());
+            } else if (entrada.equals("R*")) {
+                int pos = scanner.nextInt();
+                Show removido = lista.remover(pos);
+                System.out.println("(R) " + removido.getTitle());
+            } else if (entrada.equals("I*")) {
+                int pos = scanner.nextInt();
+                String s = scanner.next();
+                Show show = pesquisarShow(s, shows);
+                lista.inserir(show, pos);
+            }
+        }
+
+        lista.mostrar();
+        scanner.close();
+    }
+    
+    }
+   
+class Celula {
+    public Show elemento;
+    public Celula prox;
+
+    public Celula() {}
+    public Celula(Show elemento) {
+        this.elemento = elemento;
+        this.prox = null;
+    }
 }
+
+class Lista {
+    private Celula primeiro;
+    private Celula ultimo;
+
+    public Lista() {
+        primeiro = new Celula();
+        ultimo = primeiro;
+    }
+
+    public void inserirInicio(Show x) {
+        Celula tmp = new Celula(x);
+        tmp.prox = primeiro.prox;
+        primeiro.prox = tmp;
+        if (primeiro == ultimo) {
+            ultimo = tmp;
+        }
+    }
+
+    public void inserirFim(Show x) {
+        ultimo.prox = new Celula(x);
+        ultimo = ultimo.prox;
+    }
+
+    public Show removerInicio() throws Exception {
+        if (primeiro == ultimo) throw new Exception("Erro ao remover (vazia)!");
+        Celula tmp = primeiro.prox;
+        primeiro.prox = tmp.prox;
+        if (tmp == ultimo) ultimo = primeiro;
+        return tmp.elemento;
+    }
+
+    public Show removerFim() throws Exception {
+        if (primeiro == ultimo) throw new Exception("Erro ao remover (vazia)!");
+        Celula i = primeiro;
+        while (i.prox != ultimo) i = i.prox;
+        Show resp = ultimo.elemento;
+        ultimo = i;
+        i.prox = null;
+        return resp;
+    }
+
+    public void inserir(Show x, int pos) throws Exception {
+    int tam = tamanho();
+    if (pos < 0 || pos > tam) {
+        throw new Exception("Posição inválida");
+    }
+
+    if (pos == 0) {
+        inserirInicio(x);
+    } else if (pos == tam) {
+        inserirFim(x);
+    } else {
+        Celula i = primeiro;
+        for (int j = 0; j < pos; j++) {
+            i = i.prox;
+        }
+        Celula tmp = new Celula(x);
+        tmp.prox = i.prox;
+        i.prox = tmp;
+    }
+}
+
+
+       public Show remover(int pos) throws Exception {
+        int tam = tamanho();
+        if (pos < 0 || pos >= tam) throw new Exception("Posição inválida");
+
+        if (pos == 0) return removerInicio();
+        if (pos == tam - 1) return removerFim();
+
+        Celula i = primeiro;
+        for (int j = 0; j < pos; j++, i = i.prox);
+        Celula tmp = i.prox;
+        i.prox = tmp.prox;
+        return tmp.elemento;
+    }
+
+    public void mostrar() {
+        Celula i = primeiro.prox;
+        int pos = 0;
+        while (i != null) {
+            System.out.print("[" + pos + "] ");
+            i.elemento.imprimir();
+            i = i.prox;
+            pos++;
+        }
+    }
+
+    public int tamanho() {
+        int tamanho = 0;
+        for (Celula i = primeiro.prox; i != null; i = i.prox) {
+            tamanho++;
+        }
+        return tamanho;
+    }
+}
+
+

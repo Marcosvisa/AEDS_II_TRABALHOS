@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,6 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 
 public class Show {
 
@@ -137,6 +140,20 @@ public class Show {
     public void setDescripition(String descripition) {
         this.descripition = descripition;
     }
+
+
+public static LocalDate converterData(String data) {
+    if (data == null || data.equals("NaN")) {
+        return LocalDate.MIN;
+    }
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy", Locale.ENGLISH);
+    return LocalDate.parse(data, formatter);
+}
+
+
+
+
     //metodo tranformar string em lista
     public static String[] criarLista(String s) {
         int count = 1;
@@ -167,6 +184,19 @@ public class Show {
          bolhaLista(nova);
         return nova;
     }
+
+ public static Show pesquisarShow(String s, Show[] lista) {
+        for (int x = 0; x < lista.length; x++) {
+            if (lista[x] != null && s.equals(lista[x].id)) {
+                return lista[x];
+            }
+        }
+        return null;
+    }
+
+
+
+
     //metodo clonee
     public Show clone() {
         String[] castClone = cast != null ? new String[cast.length] : null;
@@ -184,13 +214,7 @@ public class Show {
         return new Show(id, type, title, director, castClone, country, data, ano,
                         rating, duration, listClone, descripition);
     }
-    //imprimir
-    public void imprimir() {
-        System.out.println("=> " + id + " ## " + title + " ## "+type+" ## " + director + " ## " +"["+
-                           formatarLista(cast)+"]" + " ## " + country + " ## " + data + " ## " +
-                           (ano == 0 ? "NaN" : ano) + " ## " +
-                           rating + " ## " + duration + " ## " + "["+formatarLista(list) +"]"+ " ##");
-    }
+ 
     //bolha para ordenar lista
     public static void bolhaLista(String[] array) {
         int n = array.length;
@@ -204,6 +228,13 @@ public class Show {
             }
         }
     }
+
+ public void imprimir(){ 
+       System.out.println("=> " + id + " ## " + title + " ## "+type+" ## " + director + " ## " +"["+
+                           formatarLista(cast)+"]" + " ## " + country + " ## " + data + " ## " +
+                           (ano == 0 ? "NaN" : ano) + " ## " +
+                           rating + " ## " +duration + " ## " + "["+formatarLista(list) +"]"+ " ##");
+}
     // formatar lista para imprimir
     private String formatarLista(String[] array) {
         if (array == null || array.length == 0 || (array.length == 1 && array[0].equals("NaN"))) {
@@ -392,112 +423,210 @@ for(; x<s.length(); x++){
 
    shows[i]= new Show(id, type, title, director, criarLista(cast), country, data, ano, rating, duration, criarLista(list), descripition);
    }
-   static int contarComp=0, contarMov=0;
+   
+   
+   
+  public static void main(String[] args) throws Exception {
+    String matricula = "859933";
+    File file = new File("/tmp/disneyplus.csv");
+    Scanner sc = new Scanner(file);
+    Show[] shows = new Show[1369];
+    int indice = 0;
 
-    public static void main (String args[]) throws FileNotFoundException{
-       
-            File file = new File("/tmp/disneyplus.csv");
-            Scanner sc = new Scanner(file);
-            Show []shows = new Show[1368];
-            int indice =0;
+    sc.nextLine();
+    while (sc.hasNextLine()) {
+        if (indice == 146) {
+            shows[indice] = new Show("s147", "Movie", "Maggie Simpson in The Force Awakens from its Nap", "David Silverman", Show.criarLista("NaN"), "NaN", "May 4, 2021", 2021, "TV-PG", "4 min", Show.criarLista("Animation, Comedy, Parody"), "In a daycare far, far away… but still in Springfield, Maggie goes on a quest for her lost pacifier.");
             sc.nextLine();
-            while (sc.hasNextLine()) {
+        } else if (indice == 440) {
+            shows[indice] = new Show("s441", "Movie", "Maggie Simpson in The Longest Daycare", "NaN", Show.criarLista("NaN"), "United States", "May 29, 2020", 2012, "PG", "5 min", Show.criarLista("Animation, Comedy"), "In this Oscar-nominated short from The Simpsons, Maggie navigates an eventful first day at daycare.");
+            sc.nextLine();
+        } else if (indice == 489) {
+            shows[indice] = new Show("s490", "Movie", "Maggie Simpson in Playdate with Destiny", "David Silverman", Show.criarLista("NaN"), "United States", "April 10, 2020", 2020, "G", "5 min", Show.criarLista("Animation, Comedy"), "A heroic baby saves Maggie Simpson from playground peril – and steals her heart.");
+            sc.nextLine();
+        } else {
+            String linha = sc.nextLine();
+            Show.processar(linha, indice, shows);
+        }
+        indice++;
+    }
+    sc.close();
+    
+    int comparacoes[]=new int[1];
+    long inicio = System.currentTimeMillis(); //temporizador 
+    Scanner scanner = new Scanner(System.in);
+    ArvoreArvore arv = new ArvoreArvore();
+    String entrada = scanner.nextLine();
 
-                if(indice==146){
-               shows[indice]= new Show("s147", "Movie", "Maggie Simpson in The Force Awakens from its Nap", "David Silverman", criarLista("NaN"), "NaN", "May 4, 2021", 2021, "TV-PG", "4 min", criarLista("Animation, Comedy, Parody"), "In a daycare far, far away… but still in Springfield, Maggie goes on a quest for her lost pacifier." );
-               sc.nextLine();
-            }
-               else if(indice==440){
-                shows[indice]= new Show("s441", "Movie", "Maggie Simpson in The Longest Daycare", "NaN", criarLista("NaN"), "United States", "May 29, 2020", 2012, "PG", "5 min", criarLista("Animation, Comedy"), "In this Oscar-nominated short from The Simpsons, Maggie navigates an eventful first day at daycare." );
-               sc.nextLine();
-            }
-            else if(indice==489){
-                shows[indice]= new Show("s490", "Movie", "Maggie Simpson in Playdate with Destiny", "David Silverman", criarLista("NaN"), "United States", "April 10, 2020", 2020, "G", "5 min", criarLista("Animation, Comedy"), "A heroic baby saves Maggie Simpson from playground peril – and steals her heart." );
-               sc.nextLine();
-            }
-                else{
-                String linha = sc.nextLine();
-                processar(linha, indice, shows);
-                }
-             indice++;
-             
-            }
-            sc.close();
-            long inicio = System.currentTimeMillis();//contar o tempo de execucao
-            String matricula="008559933";
-            String []shows2 = new String[1000];
-            int contador =0;
-            //processar entradas do verde
-            Scanner scanner= new Scanner(System.in);
-            String entrada;
-            entrada= scanner.nextLine();
-            //preencher o novo vetor ate encontrar FIM
-             while(!(entrada.length()== 3 && entrada.charAt(0)=='F' && entrada.charAt(1)=='I'&& entrada.charAt(2)=='M')){
-              
-                for(int x=0; x<shows.length; x++){
-                    if(entrada.equals(shows[x].id)){
-                     shows2[contador]=shows[x].title;
-                     x=shows.length +1;
-                     contador++;
-                    }
-                }
-             entrada= scanner.nextLine();
-             }
-            
-             //ordenar
-             for (int i = 0; i < contador - 1; i++) {
-                for (int j = 0; j < contador - 1 - i; j++) {
-                    if (shows2[j].compareTo(shows2[j + 1]) > 0) {
-                        String temp = shows2[j];
-                        shows2[j] = shows2[j + 1];
-                        shows2[j + 1] = temp;
-                    }
-                }
-            }
-            //pesquisar se tem os titulos no novo vetor 
-            entrada = scanner.nextLine();
-            while (!(entrada.equals("FIM"))) {
-                boolean encontrado = false;
-                int inicio2 = 0, fim = contador - 1;
-            
-                while (inicio2 <= fim) {
-                    int meio = (inicio2 + fim) / 2;
-                    contarComp++;  // comparação
-                    int comp = entrada.compareTo(shows2[meio]);
-            
-                    if (comp == 0) {
-                        System.out.println("SIM");
-                        encontrado = true;
-                        break;
-                    } else if (comp < 0) {
-                        fim = meio - 1;
-                    } else {
-                        inicio2 = meio + 1;
-                    }
-                }
-            
-                if (!encontrado) {
-                    System.out.println("NAO");
-                }
-            
-                entrada = scanner.nextLine();
-            }
-            
-            scanner.close();        
-             
 
-             
-             long fim = System.currentTimeMillis();
-             long tempoExecucao = fim - inicio;
-             
-             //salvar dadaos em arquivo
-               try (BufferedWriter writer = new BufferedWriter(new FileWriter("00859933_sequencial.txt"))) {
-              writer.write("Matricula: " + matricula + "\n");
-              writer.write("Tempo de execucao: " + tempoExecucao + " ms\n");
-              writer.write("Numero de comparacoes: " + contarComp + "\n");
-          } catch (IOException e) {
-              System.out.println("Erro ao salvar o arquivo: " + e.getMessage());
-          }
-      }
-     
+    while (!entrada.equals("FIM")) {
+        for (int x = 0; x < indice; x++) {
+            if (shows[x] != null && entrada.equals(shows[x].getId())) {
+                arv.inserir(shows[x]);
+                x=indice;
+            }
+        }
+        entrada = scanner.nextLine();
+    }
+    
+
+    entrada = scanner.nextLine();
+    while (!entrada.equals("FIM")) {
+       
+        for (int x = 0; x < indice; x++) {
+            if (shows[x] != null && entrada.equals(shows[x].getTitle())) {
+                 arv.pesquisar(shows[x].getTitle());
+                x=indice;
+              }
+        
+         }
+        entrada = scanner.nextLine();
+    }
+   
+    scanner.close();
+    long fim = System.currentTimeMillis();
+    long tempoExecucao = fim - inicio;
+
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter("859933_arvoreArvore.txt"))) {
+        writer.write(matricula + "\t" + tempoExecucao + "\t" + arv.comparacoes);
+    } catch (IOException e) {
+        System.out.println("erro" + e.getMessage());
+    }
+}
+
+    }
+
+class No2 {
+    Show elemento;
+    No2 esq, dir;
+
+    public No2(Show s) {
+        this.elemento = s;
+        this.esq = this.dir = null;
+    }
+}
+
+class Arvore2 {
+    private No2 raiz;
+    public String direcaoFinal = null;
+
+    public Arvore2() {
+        raiz = null;
+    }
+
+    public void inserir(Show s) {
+        raiz = inserir(s, raiz);
+    }
+
+    private No2 inserir(Show s, No2 i) {
+        if (i == null) {
+            return new No2(s);
+        } else if (s.getTitle().compareTo(i.elemento.getTitle()) < 0) {
+            i.esq = inserir(s, i.esq);
+        } else if (s.getTitle().compareTo(i.elemento.getTitle()) > 0) {
+            i.dir = inserir(s, i.dir);
+        }
+        return i;
+    }
+
+    public boolean pesquisar(String title) {
+        direcaoFinal = null;
+        System.out.print("raiz ");
+        return pesquisar(title, raiz);
+    }
+
+    private boolean pesquisar(String title, No2 i) {
+        if (i == null) return false;
+
+        if (title.equals(i.elemento.getTitle())) return true;
+
+        if (title.compareTo(i.elemento.getTitle()) < 0) {
+            System.out.print("esq ");
+            boolean achou = pesquisar(title, i.esq);
+            if (achou) direcaoFinal = "ESQ";
+            return achou;
+        } else {
+            System.out.print("dir ");
+            boolean achou = pesquisar(title, i.dir);
+            if (achou) direcaoFinal = "DIR";
+            return achou;
+        }
+    }
+}
+
+// no principal
+class No1 {
+    int chave;
+    No1 esq, dir;
+    Arvore2 arvore;
+
+    public No1(int chave) {
+        this.chave = chave;
+        this.esq = this.dir = null;
+        this.arvore = new Arvore2();
+    }
+}
+
+class ArvoreArvore {
+    int comparacoes=0;
+    private No1 raiz;
+
+    public ArvoreArvore() {
+        int[] ordem = {7, 3, 11, 1, 5, 9, 13, 0, 2, 4, 6, 8, 10, 12, 14};
+        for (int c : ordem) raiz = inserirNo1(c, raiz);
+    }
+
+    private No1 inserirNo1(int chave, No1 i) {
+        if (i == null){
+         comparacoes++;
+         return new No1(chave);
+        }
+        else if (chave < i.chave) {
+                comparacoes++;
+            i.esq = inserirNo1(chave, i.esq);
+        }
+        else if (chave > i.chave) {
+                comparacoes++;
+        i.dir = inserirNo1(chave, i.dir);
+        }
+        return i;
+    }
+
+    public void inserir(Show s) {
+        int mod = s.getAno() % 15;
+        inserirShow(s, raiz, mod);
+    }
+    private void inserirShow(Show s, No1 i, int mod) {
+        if (i == null) return; 
+        else if (mod < i.chave) inserirShow(s, i.esq, mod);
+        else if (mod > i.chave) inserirShow(s, i.dir, mod);
+        else i.arvore.inserir(s); 
+    }
+
+  public boolean pesquisar(String titulo) {
+    return pesquisar(raiz, titulo);
+}
+
+private boolean pesquisar(No1 i, String titulo) {
+    if (i == null) return false;
+
+    boolean achou = i.arvore.pesquisar(titulo);
+
+    if (achou) {
+        System.out.println(i.arvore.direcaoFinal); // imprime ESQ ou DIR
+        return true;
+    }
+
+    System.out.print("esq ");
+    boolean achouEsq = pesquisar(i.esq, titulo);
+    if (achouEsq) return true;
+
+    System.out.print("dir ");
+    boolean achouDir = pesquisar(i.dir, titulo);
+    if (achouDir) return true;
+
+    System.out.println("NAO");
+    return false;
+}
+
 }
